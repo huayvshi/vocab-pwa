@@ -1,0 +1,41 @@
+{
+  "name": "考研词汇 · 查词与背诵",
+  "short_name": "考研词汇",
+  "description": "考研英语一 6216 词：英文/中文搜索、音标释义、英音美音发音、词根分类、间隔重复复习、离线可用。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#f5f6f8",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
