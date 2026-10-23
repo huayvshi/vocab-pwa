@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "node tools/test_search.mjs && node tools/test_study.mjs",
     "vocab": "python tools/build_vocab.py",
-    "icons": "python tools/make_icons.py"
+    "icons": "python tools/make_icons.py",
+    "deploy:pages": "pwsh -ExecutionPolicy Bypass -File tools/deploy_pages.ps1"
   },
   "dependencies": {
     "react": "^19.3.1",

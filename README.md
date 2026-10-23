@@ -27,9 +27,49 @@ pnpm test             # 单元测试：搜索 35 项 + 学习引擎 50 项
 
 ---
 
+## GitHub Pages 部署（已上线）
+
+**线上地址：https://huayvshi.github.io/vocab-pwa/**
+**源码仓库：https://github.com/huayvshi/vocab-pwa**
+
+采用「源码在 `main`、构建产物在 `gh-pages`」的双分支方案，不依赖 CI：
+
+| 分支 | 内容 | 用途 |
+| --- | --- | --- |
+| `main` | 全部源码 + `tools/` 流水线（`dist`、`node_modules`、`.verify` 已 gitignore） | 开发 |
+| `gh-pages` | `dist/` 的构建产物 + `.nojekyll` | Pages 发布源 |
+
+首次部署步骤（已做过一遍，这里是复现方式）：
+
+```bash
+# 1) 建仓库并推源码（用 PAT，classic token 需勾 repo）
+git remote add origin https://github.com/<user>/vocab-pwa.git
+git push -u origin main
+
+# 2) 构建并推 gh-pages
+pnpm build
+pwsh -ExecutionPolicy Bypass -File tools/deploy_pages.ps1
+#   脚本会：复制 dist → 临时目录、加 .nojekyll、git init、强制推送到 gh-pages
+
+# 3) 开启 Pages：仓库 Settings → Pages → Source = Deploy from a branch → gh-pages / (root)
+#   （只要 gh-pages 分支出现，GitHub 有时会自动替你开启）
+```
+
+之后改代码要重新上线，只要两步：`pnpm build` 然后 `pwsh -ExecutionPolicy Bypass -File tools/deploy_pages.ps1`（脚本默认自己会先构建，加 `-SkipBuild` 可跳过）。
+
+要点：
+
+- PowerShell 默认执行策略会拒绝 `.ps1`，所以要么用 `-ExecutionPolicy Bypass`，要么改用 `.cmd`/`npm run deploy:pages`。
+- `base: './'` 是相对路径，所以 `https://<user>.github.io/vocab-pwa/` 这种子路径部署不用改配置；Service Worker 的作用域自动落在 `/vocab-pwa/`。
+- `gh-pages` 分支每次强制推送，不保留历史，仓库不会因为多版本构建产物而膨胀。
+- 实测（2026-10-23）：`/`、`/sw.js`、`/manifest.webmanifest`、`/data/vocab.json`（2.0 MB）、`/data/roots.json`、`/icons/icon-192.png` 全部 200；浏览器里 `isSecureContext=true`、SW `controller=true`、scope 为 `https://huayvshi.github.io/vocab-pwa/`、缓存 12 条（含词库/词根/构建产物）。
+
+---
+
 ## 公网 HTTPS（临时，不花钱）
 
 本机跑着服务、想立刻用手机以 HTTPS 打开（这样 Service Worker / 离线 / 安装才可用）：
+
 
 ```bash
 # 1) 本地服务（绑到所有网卡）
